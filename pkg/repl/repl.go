@@ -186,6 +186,9 @@ func (r *REPL) Run(clientId uuid.UUID, prompt string, input io.Reader, output io
 		//io.WriteString(writer, prompt)
 		io.WriteString(output, prompt)
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(w, "Closing error: %v\n", err)
+	}
 	// Print an additional line if we encountered an EOF character.
 	//io.WriteString(writer, "\n")
 	// TODO good insight here: https://edstem.org/us/courses/104876/discussion/8282568
