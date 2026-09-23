@@ -146,8 +146,12 @@ the equivalent of argv[0] - pass the whole string!
 */
 func (r *REPL) Run(clientId uuid.UUID, prompt string, input io.Reader, output io.Writer) {
 	// Get reader and writer; stdin and stdout if no conn.
-	output = os.Stdout
-	input = os.Stdin
+	if input == nil {
+		input = os.Stdin
+	}
+	if output == nil {
+		output = os.Stdout
+	}
 	replConfig := &REPLConfig{clientId: clientId}
 	io.WriteString(output, "Welcome! Get started by typing in commands. Call '.help' to see help functions")
 
@@ -187,7 +191,7 @@ func (r *REPL) Run(clientId uuid.UUID, prompt string, input io.Reader, output io
 		io.WriteString(output, prompt)
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(output, "Closing error: %v\n", err)
+		io.WriteString(output, "\n")
 	}
 	// Print an additional line if we encountered an EOF character.
 	//io.WriteString(writer, "\n")
